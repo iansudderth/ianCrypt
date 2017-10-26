@@ -1,0 +1,11 @@
+{
+  "name": "ianCrypt",
+  "version": "1.0.0",
+  "description": "Small Cryptography library for use in projects",
+  "main": "index.js",
+  "author": "Ian Sudderth",
+  "license": "MIT",
+  "dependencies": {
+    "sodium-native": "^1.10.3"
+  }
+}
