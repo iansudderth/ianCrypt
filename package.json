@@ -6,6 +6,7 @@
   "author": "Ian Sudderth",
   "license": "MIT",
   "dependencies": {
+    "lodash": "^4.17.4",
     "sodium-native": "^1.10.3"
   },
   "prettier": {
@@ -21,8 +22,8 @@
   "devDependencies": {
     "jest": "^21.2.1"
   },
-  "scripts":{
-    "test":"jest",
+  "scripts": {
+    "test": "jest",
     "test-coverage": "jest --coverage",
     "test-full": "jest --coverage --verbose"
   }
