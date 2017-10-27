@@ -44,29 +44,94 @@ describe('generateSaltString', () => {
 });
 
 describe('generatePasswordHashBuffer', () => {
-  it('should return a value', () => {});
+  var sameSalt = generateSaltBuffer();
+  var differentSalt = generateSaltBuffer();
+  var password = 'password';
+  var differentPassword = 'something-else';
 
-  it('should return a buffer', () => {});
+  it('should return a value', () => {
+    expect(generatePasswordHashBuffer(password, sameSalt)).toBeTruthy();
+  });
 
-  it('should generate the same result given the same password and salt', () => {});
+  it('should return a buffer', () => {
+    expect(
+      Buffer.isBuffer(generatePasswordHashBuffer(password, sameSalt)),
+    ).toBeTruthy();
+  });
 
-  it('should generate different results with the same password and different salts', () => {});
+  it('should generate the same result given the same password and salt', () => {
+    expect(generatePasswordHashBuffer(password, sameSalt)).toEqual(
+      generatePasswordHashBuffer(password, sameSalt),
+    );
+  });
 
-  it('should generate different results with different passwords and the same salt', () => {});
+  it('should generate different results with the same password and different salts', () => {
+    expect(generatePasswordHashBuffer(password, sameSalt)).not.toEqual(
+      generatePasswordHashBuffer(password, differentSalt),
+    );
+  });
 
-  it('should generate a hash of the given length', () => {});
+  it('should generate different results with different passwords and the same salt', () => {
+    expect(generatePasswordHashBuffer(password, sameSalt)).not.toEqual(
+      generatePasswordHashBuffer(differentPassword, sameSalt),
+    );
+  });
 
-  it('should generate a hash of 32 bytes if no length value is given', () => {});
+  it('should generate a hash of the given length', () => {
+    expect(generatePasswordHashBuffer(password, sameSalt, 64).length).toBe(64);
+  });
 
-  it('should generate a different result if different speeds are specified', () => {});
+  it('should generate a hash of 32 bytes if no length value is given', () => {
+    expect(generatePasswordHashBuffer(password, sameSalt).length).toBe(32);
+  });
 
-  it('should take longer to run if a slower speed is specified', () => {});
+  it('should generate a different result if different speeds are specified', () => {
+    expect(
+      generatePasswordHashBuffer(password, sameSalt, undefined, 'fast'),
+    ).not.toEqual(
+      generatePasswordHashBuffer(password, sameSalt, undefined, 'med'),
+    );
+  });
+
+  it('should take longer to run if a slower speed is specified', () => {
+    var startTimeFast = new Date();
+    generatePasswordHashBuffer(password, sameSalt);
+    var endTimeFast = new Date();
+    var fastTime = endTimeFast - startTimeFast;
+
+    var startTimeSlow = new Date();
+    generatePasswordHashBuffer(password, sameSalt, undefined, 'med');
+    var endTimeSlow = new Date();
+    var slowTime = endTimeSlow - startTimeSlow;
+
+    expect(slowTime).toBeGreaterThan(fastTime);
+  });
 });
 
 describe('generatePasswordHashString', () => {
-  it('should return a value', () => {});
+  var sameSalt = generateSaltBuffer();
+  var differentSalt = generateSaltBuffer();
+  var password = 'password';
+  var differentPassword = 'something-else';
+  it('should return a value', () => {
+    expect(generatePasswordHashString(password, sameSalt)).toBeTruthy();
+  });
 
-  it('should return a string', () => {});
+  it('should return a string', () => {
+    expect(typeof generatePasswordHashString(password, sameSalt)).toBe(
+      'string',
+    );
+  });
 
-  it('should generate the same result given the same password and salt', () => {});
+  it('should generate the same result given the same password and salt', () => {
+    expect(generatePasswordHashString(password, sameSalt)).toEqual(
+      generatePasswordHashString(password, sameSalt),
+    );
+  });
+
+  it('should generate a different value with the same salt and different passwords', () => {
+    expect(generatePasswordHashString(password, sameSalt)).not.toEqual(
+      generatePasswordHashString(differentPassword, sameSalt),
+    );
+  });
 });

@@ -22,6 +22,8 @@
     "jest": "^21.2.1"
   },
   "scripts":{
-    "test":"jest"
+    "test":"jest",
+    "test-coverage": "jest --coverage",
+    "test-full": "jest --coverage --verbose"
   }
 }
