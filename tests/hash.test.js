@@ -19,8 +19,8 @@ describe('generateHexHash', () => {
   });
 
   it('should return a string that only includes hex characters', () => {
-    var testValues = /a-f0-9/g;
-    expect(testValues.test(generateHexHash)).toBeTruthy();
+    var testValues = /^[a-f0-9]*$/g;
+    expect(testValues.test(generateHexHash())).toBeTruthy();
   });
 });
 
@@ -38,18 +38,18 @@ describe('generateAlphaHash', () => {
   });
 
   it('should return a string with alpha numeric characters', () => {
-    var alphaTest = /a-zA-Z0-9/g;
+    var alphaTest = /^[a-zA-Z0-9]*$/g;
     expect(alphaTest.test(generateAlphaHash())).toBeTruthy();
   });
 
   it('should ignore characters from the given filter', () => {
-    var noLettersTest = /0-9/g;
-    var noNumbersTest = /a-zA-Z/g;
-    var noCapsTest = /a-z0-9/g;
+    var noLettersTest = /^[0-9]*$/g;
+    var noNumbersTest = /^[a-zA-Z]*$/g;
+    var noCapsTest = /^[a-z0-9]*$/g;
 
     var noLettersFilter = filterFromRegEx(noLettersTest);
-    var noNumbersFilter = filterFromRegEx(noNumbersFilter);
-    var noCapsFilter = filterFromRegEx(noCapsFilter);
+    var noNumbersFilter = filterFromRegEx(noNumbersTest);
+    var noCapsFilter = filterFromRegEx(noCapsTest);
 
     expect(
       noLettersTest.test(generateAlphaHash(32, noLettersFilter)),
