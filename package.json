@@ -25,6 +25,7 @@
   "scripts": {
     "test": "jest",
     "test-coverage": "jest --coverage",
-    "test-full": "jest --coverage --verbose"
+    "test-full": "jest --coverage --verbose",
+    "test-changed":"jest --onlyChanged"
   }
 }

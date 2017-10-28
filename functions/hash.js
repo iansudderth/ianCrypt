@@ -7,7 +7,11 @@ function generateHexHash(length = 16) {
   var buff = generateRandomBuffer(length);
 }
 
-function generateAlphaHash(length = 16) {}
+function generateAlphaHash(length = 16, filter) {
+  if (!filter) {
+    filter = () => true;
+  }
+}
 
 module.exports.generateAlphaHash = generateAlphaHash;
 module.exports.generateHexHash = generateHexHash;

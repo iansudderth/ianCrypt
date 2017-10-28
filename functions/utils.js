@@ -11,5 +11,12 @@ function generateRandomBuffer(length = 16) {
   return buff;
 }
 
+function filterFromRegEx(reg) {
+  return function(char) {
+    return reg.test(char);
+  };
+}
+
 module.exports.randomizeBuffer = randomizeBuffer;
 module.exports.generateRandomBuffer = generateRandomBuffer;
+module.exports.filterFromRegEx = filterFromRegEx;
