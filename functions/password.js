@@ -1,4 +1,4 @@
-var sodium = require("sodium-native");
+var sodium = require('sodium-native');
 
 function generateSaltBuffer() {
   var saltBuffer = new Buffer(sodium.crypto_pwhash_SALTBYTES);
@@ -7,34 +7,34 @@ function generateSaltBuffer() {
 }
 
 function generateSaltString() {
-  return generateSaltBuffer().toString("hex");
+  return generateSaltBuffer().toString('hex');
 }
 
 function generatePasswordHashBuffer(
   password,
   salt,
   size = sodium.crypto_secretbox_KEYBYTES,
-  speed = "fast"
+  speed = 'fast',
 ) {
   var opsLimit = sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE;
   var memLimit = sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE;
 
   speed = speed.toLowerCase();
   if (
-    speed === "med" ||
-    speed === "medium" ||
-    speed === "mod" ||
-    speed === "moderate"
+    speed === 'med' ||
+    speed === 'medium' ||
+    speed === 'mod' ||
+    speed === 'moderate'
   ) {
     opsLimit = sodium.crypto_pwhash_OPSLIMIT_MODERATE;
     memLimit = sodium.crypto_pwhash_MEMLIMIT_MODERATE;
   }
 
   if (
-    speed === "slow" ||
-    speed === "high" ||
-    speed === "hi" ||
-    speed === "sensitive"
+    speed === 'slow' ||
+    speed === 'high' ||
+    speed === 'hi' ||
+    speed === 'sensitive'
   ) {
     opsLimit = sodium.crypto_pwhash_OPSLIMIT_SENSITIVE;
     memLimit = sodium.crypto_pwhash_MEMLIMIT_SENSITIVE;
@@ -43,7 +43,7 @@ function generatePasswordHashBuffer(
   if (Buffer.isBuffer(salt)) {
     saltBuffer = salt;
   } else {
-    saltBuffer = new Buffer(salt, "hex");
+    saltBuffer = new Buffer(salt, 'hex');
   }
   var output = new Buffer(size);
   var passBuffer = new Buffer(password);
@@ -54,15 +54,20 @@ function generatePasswordHashBuffer(
     saltBuffer,
     opsLimit,
     memLimit,
-    algorithm
+    algorithm,
   );
 
   return output;
 }
 
-function generatePasswordHashString(password, salt, size, speed) {
+function generatePasswordHashString(
+  password,
+  salt,
+  size = sodium.crypto_secretbox_KEYBYTES,
+  speed = 'fast',
+) {
   return generatePasswordHashBuffer(password, salt, size, speed).toString(
-    "hex"
+    'hex',
   );
 }
 

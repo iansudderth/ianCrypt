@@ -51,14 +51,26 @@ describe('generateAlphaHash', () => {
     var noNumbersFilter = filterFromRegEx(noNumbersTest);
     var noCapsFilter = filterFromRegEx(noCapsTest);
 
-    expect(
-      noLettersTest.test(generateAlphaHash(32, noLettersFilter)),
-    ).toBeTruthy();
+    expect(noLettersTest.test(generateAlphaHash(32, noLettersFilter))).toBe(
+      true,
+    );
 
-    expect(
-      noNumbersTest.test(generateAlphaHash(32, noNumbersFilter)),
-    ).toBeTruthy();
+    expect(noNumbersTest.test(generateAlphaHash(32, noNumbersFilter))).toBe(
+      true,
+    );
 
-    expect(noCapsTest.test(generateAlphaHash(32, noCapsFilter))).toBeTruthy();
+    expect(noCapsTest.test(generateAlphaHash(32, noCapsFilter))).toBe(true);
+  });
+
+  it('should accept a regular expression as an argument for the filter', () => {
+    var noLettersTest = /^[0-9]*$/g;
+    var noNumbersTest = /^[a-zA-Z]*$/g;
+    var noCapsTest = /^[a-z0-9]*$/g;
+
+    expect(noLettersTest.test(generateAlphaHash(32, noLettersTest))).toBe(true);
+
+    expect(noNumbersTest.test(generateAlphaHash(32, noNumbersTest))).toBe(true);
+
+    expect(noCapsTest.test(generateAlphaHash(32, noCapsTest))).toBe(true);
   });
 });

@@ -4,6 +4,8 @@ var passwordUtils = require('./password');
 var generateSaltBuffer = passwordUtils.generateSaltBuffer;
 var generatePasswordHashBuffer = passwordUtils.generatePasswordHashBuffer;
 
+var boxRegEx = /^[0-9a-f]{32}\/[0-9a-f]{48}\/[a-f0-9]{16,}$/;
+
 function splitBox(boxHash) {
   var split = boxHash.split('/');
   return {
@@ -14,6 +16,13 @@ function splitBox(boxHash) {
 }
 
 function generateBox(message, password) {
+  if (typeof message !== 'string') {
+    throw 'boxHash must be a string';
+  }
+
+  if (typeof password !== 'string') {
+    throw 'Password must be a string';
+  }
   var nonce = new Buffer(sodium.crypto_secretbox_NONCEBYTES);
   sodium.randombytes_buf(nonce);
 
@@ -29,13 +38,25 @@ function generateBox(message, password) {
 
   var encryptedText = encryptedMessage.toString('hex');
   var nonceText = nonce.toString('hex');
-  var keyText = key.toString('hex');
   var saltText = salt.toString('hex');
 
   return saltText + '/' + nonceText + '/' + encryptedText;
 }
 
 function unlockBox(boxHash, password) {
+  if (typeof boxHash !== 'string') {
+    throw 'boxHash must be a string';
+  }
+
+  if (typeof password !== 'string') {
+    throw 'Password must be a string';
+  }
+
+  if (!boxRegEx.test(boxHash)) {
+    console.warn('Invalid Boxhash Received');
+    return null;
+  }
+
   var box = splitBox(boxHash);
 
   var saltBuffer = new Buffer(box.salt, 'hex');
@@ -61,5 +82,27 @@ function unlockBox(boxHash, password) {
   }
 }
 
+function updateBox(boxHash, password, updater = text => text) {
+  if (typeof boxHash !== 'string') {
+    throw 'boxHash must be a string';
+  }
+
+  if (typeof password !== 'string') {
+    throw 'Password must be a string';
+  }
+
+  if (typeof updater !== 'function') {
+    throw 'Updater must be a function or undefined';
+  }
+
+  var unlockedBox = unlockBox(boxHash, password);
+  if (unlockedBox === null) {
+    return null;
+  }
+  var newContents = updater(unlockedBox);
+  return generateBox(newContents, password);
+}
+
 module.exports.generateBox = generateBox;
 module.exports.unlockBox = unlockBox;
+module.exports.updateBox = updateBox;
