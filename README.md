@@ -31,4 +31,4 @@ Currently the library includes some basic password storage, hash generation, and
 
 ### unlockBox( boxHash, password )
 
-### updateBox( boxHash, password, callback )
+### updateBox( boxHash, password, updaterFunction )
