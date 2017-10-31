@@ -22,6 +22,8 @@ Currently the library includes some basic password storage, hash generation, and
 
 ### generatePasswordHash( password, salt, [length], [speed] )
 
+### validatePassword( password, salt, hash, [speed] )
+
 
 
 ## Secret Box Encryption
