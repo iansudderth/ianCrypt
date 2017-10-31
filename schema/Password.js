@@ -7,3 +7,5 @@ const passwordSchema = new mongoose.Schema({
   salt: String,
   hash: String,
 });
+
+module.exports = passwordSchema;
