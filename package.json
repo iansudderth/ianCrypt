@@ -1,10 +1,14 @@
 {
-  "name": "ianCrypt",
-  "version": "1.0.0",
+  "name": "suddzzCrypt",
+  "version": "0.1.0",
   "description": "Small Cryptography library for use in projects",
   "main": "index.js",
   "author": "Ian Sudderth",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iansudderth/suddzzCrypt"
+  },
   "dependencies": {
     "lodash": "^4.17.4",
     "sodium-native": "^1.10.3"
