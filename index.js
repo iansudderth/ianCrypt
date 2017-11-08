@@ -1,4 +1,7 @@
-const { generateAlphaHash, generateHexHash } = require('./functions/hash');
+const {
+  randomAlphaString,
+  randomHexString,
+} = require('./functions/randomString');
 
 const {
   generateSaltString,
@@ -7,8 +10,9 @@ const {
 
 const { generateBox, unlockBox, updateBox } = require('./functions/secretBox');
 
-module.exports.generateAlphaHash = generateAlphaHash;
-module.exports.generateHexHash = generateHexHash;
+module.exports.randomAlphaString = randomAlphaString;
+module.exports.randomHexString = randomHexString;
+
 module.exports.generateSalt = generateSaltString;
 module.exports.generatePasswordHash = generatePasswordHashString;
 
