@@ -67,6 +67,15 @@ function generatePasswordHashString(
   speed = 'fast',
 ) {
   if (!salt) {
+    salt = generateSaltBuffer();
+    saltString = salt.toString('hex');
+    var passwordHashString = generatePasswordHashString(
+      password,
+      salt,
+      size,
+      speed,
+    );
+    return saltString + '/' + passwordHashString;
   } else {
     return generatePasswordHashBuffer(password, salt, size, speed).toString(
       'hex',

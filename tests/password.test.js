@@ -137,6 +137,7 @@ describe('generatePasswordHashString', () => {
   });
 
   it('should generate a single string that includes the salt if no salt is passed', () => {
+    console.log(generatePasswordHashString(password));
     expect(saltHashFormat.test(generatePasswordHashString(password))).toBe(
       true,
     );
