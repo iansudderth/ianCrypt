@@ -113,6 +113,7 @@ describe('generatePasswordHashString', () => {
   var differentSalt = generateSaltBuffer();
   var password = 'password';
   var differentPassword = 'something-else';
+  var saltHashFormat = /^[0-9a-f]{32}\/[0-9a-f]*$/;
   it('should return a value', () => {
     expect(generatePasswordHashString(password, sameSalt)).toBeTruthy();
   });
@@ -132,6 +133,12 @@ describe('generatePasswordHashString', () => {
   it('should generate a different value with the same salt and different passwords', () => {
     expect(generatePasswordHashString(password, sameSalt)).not.toEqual(
       generatePasswordHashString(differentPassword, sameSalt),
+    );
+  });
+
+  it('should generate a single string that includes the salt if no salt is passed', () => {
+    expect(saltHashFormat.test(generatePasswordHashString(password))).toBe(
+      true,
     );
   });
 });

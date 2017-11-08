@@ -66,9 +66,12 @@ function generatePasswordHashString(
   size = sodium.crypto_secretbox_KEYBYTES,
   speed = 'fast',
 ) {
-  return generatePasswordHashBuffer(password, salt, size, speed).toString(
-    'hex',
-  );
+  if (!salt) {
+  } else {
+    return generatePasswordHashBuffer(password, salt, size, speed).toString(
+      'hex',
+    );
+  }
 }
 
 module.exports.generateSaltBuffer = generateSaltBuffer;
