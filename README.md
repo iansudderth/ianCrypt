@@ -18,7 +18,7 @@ yarn add https://github.com/iansudderth/suddzzCrypt.git
 Then, import any of the functions from the package
 
 ```javascript
-const { generatePasswordHash } = require('suddzzCrypt);
+const { generatePasswordHash } = require('suddzzCrypt');
 ```
 
 ## Random String Generation
