@@ -6,6 +6,7 @@ var {
   generateSaltBuffer,
   generateSaltString,
   authenticatePassword,
+
 } = passwordUtilities;
 
 describe('generateSaltBuffer', () => {
@@ -188,5 +189,35 @@ describe('authenticatePassword', () => {
     expect(() => {
       authenticatePassword(password, passwordHash);
     }).toThrow();
+  });
+});
+
+describe('validatePassword', () => {
+  var password = 'password';
+  var incorrectPassword = 'not-really-though';
+
+  var saltOne = generateSaltString();
+  var saltTwo = generateSaltString();
+
+  var hashOne = generatePasswordHashString(password, saltOne);
+  var hashTwo = generatePasswordHashString(password, saltTwo);
+
+  it('should return a boolean', () => {
+    expect(typeof validatePassword(password, saltOne, hashOne)).toBe('boolean');
+  });
+
+  it('should return true if the password and salt pair matches the one used to generate the hash', () => {
+    expect(validatePassword(password, saltOne, hashOne)).toBe(true);
+    expect(validatePassword(password, saltTwo, hashTwo)).toBe(true);
+  });
+
+  it('should return false if the password is incorrect', () => {
+    expect(validatePassword(incorrectPassword, hashOne, hashTwo)).toBe(false);
+  });
+
+  it('should return null if any of the arguments are missing', () => {
+    expect(validatePassword()).toBe(null);
+    expect(validatePassword(password)).toBe(null);
+    expect(validatePassword(password, saltOne)).toBe(null);
   });
 });

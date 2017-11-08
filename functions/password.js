@@ -111,8 +111,24 @@ function authenticatePassword(password, passwordHash, salt) {
   return testHash === passwordHash;
 }
 
+function validatePassword(password, salt, hash, speed = 'fast') {
+  if (!password || !salt || !hash) {
+    return null;
+  }
+
+  var passHash = generatePasswordHashString(
+    password,
+    salt,
+    (size = hash.length / 2),
+    speed,
+  );
+
+  return passHash === hash;
+}
+
 module.exports.generateSaltBuffer = generateSaltBuffer;
 module.exports.generateSaltString = generateSaltString;
 module.exports.generatePasswordHashBuffer = generatePasswordHashBuffer;
 module.exports.generatePasswordHashString = generatePasswordHashString;
 module.exports.authenticatePassword = authenticatePassword;
+
