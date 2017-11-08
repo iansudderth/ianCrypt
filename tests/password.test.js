@@ -5,7 +5,8 @@ var {
   generatePasswordHashString,
   generateSaltBuffer,
   generateSaltString,
-  validatePassword,
+  authenticatePassword,
+
 } = passwordUtilities;
 
 describe('generateSaltBuffer', () => {
@@ -114,6 +115,7 @@ describe('generatePasswordHashString', () => {
   var differentSalt = generateSaltBuffer();
   var password = 'password';
   var differentPassword = 'something-else';
+  var saltHashFormat = /^[0-9a-f]{32}\/[0-9a-f]*$/;
   it('should return a value', () => {
     expect(generatePasswordHashString(password, sameSalt)).toBeTruthy();
   });
@@ -134,6 +136,59 @@ describe('generatePasswordHashString', () => {
     expect(generatePasswordHashString(password, sameSalt)).not.toEqual(
       generatePasswordHashString(differentPassword, sameSalt),
     );
+  });
+
+  it('should generate a single string that includes the salt if no salt is passed', () => {
+    console.log(generatePasswordHashString(password));
+    expect(saltHashFormat.test(generatePasswordHashString(password))).toBe(
+      true,
+    );
+  });
+});
+
+describe('authenticatePassword', () => {
+  var sameSalt = generateSaltString();
+  var differentSalt = generateSaltString();
+  var password = 'password';
+  var differentPassword = 'something-else';
+  var passwordHash = generatePasswordHashString(password, sameSalt);
+  var saltlessHash = generatePasswordHashString(password);
+  var saltHashFormat = /^[0-9a-f]{32}\/[0-9a-f]*$/;
+
+  it('should return a boolean', () => {
+    expect(typeof authenticatePassword(password, passwordHash, sameSalt)).toBe(
+      'boolean',
+    );
+  });
+
+  it('should return false if the password or salt are incorrect', () => {
+    expect(
+      authenticatePassword(differentPassword, passwordHash, sameSalt),
+    ).toBe(false);
+
+    expect(authenticatePassword(password, passwordHash, differentSalt)).toBe(
+      false,
+    );
+  });
+
+  it('should return true if the password and salt are correct', () => {
+    expect(authenticatePassword(password, passwordHash, sameSalt)).toBe(true);
+  });
+
+  it('should accept a combined password and salt string separated by a / if no salt is given', () => {
+    expect(authenticatePassword(password, saltlessHash)).toBe(true);
+  });
+
+  it('throws an error if any part is invalid', () => {
+    expect(() => {
+      authenticatePassword(12345, saltlessHash);
+    }).toThrow();
+    expect(() => {
+      authenticatePassword(password, passwordHash, 1231231231);
+    }).toThrow();
+    expect(() => {
+      authenticatePassword(password, passwordHash);
+    }).toThrow();
   });
 });
 

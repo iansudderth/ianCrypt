@@ -6,13 +6,13 @@ var {
   filterFromRegEx,
 } = require('./utils');
 
-function generateHexHash(length = 16) {
+function randomHexString(length = 16) {
   var bufferLength = Math.floor(length / 2);
   var buff = generateRandomBuffer(bufferLength);
   return buff.toString('hex');
 }
 
-function generateAlphaHash(length = 16, filter = () => true) {
+function randomAlphaString(length = 16, filter = () => true) {
   if (filter instanceof RegExp) {
     filter = filterFromRegEx(filter);
   }
@@ -31,5 +31,5 @@ function generateAlphaHash(length = 16, filter = () => true) {
   return hash;
 }
 
-module.exports.generateAlphaHash = generateAlphaHash;
-module.exports.generateHexHash = generateHexHash;
+module.exports.randomAlphaString = randomAlphaString;
+module.exports.randomHexString = randomHexString;

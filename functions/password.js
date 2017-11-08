@@ -66,9 +66,49 @@ function generatePasswordHashString(
   size = sodium.crypto_secretbox_KEYBYTES,
   speed = 'fast',
 ) {
-  return generatePasswordHashBuffer(password, salt, size, speed).toString(
-    'hex',
-  );
+  if (!salt) {
+    salt = generateSaltBuffer();
+    saltString = salt.toString('hex');
+    var passwordHashString = generatePasswordHashString(
+      password,
+      salt,
+      size,
+      speed,
+    );
+    return saltString + '/' + passwordHashString;
+  } else {
+    return generatePasswordHashBuffer(password, salt, size, speed).toString(
+      'hex',
+    );
+  }
+}
+
+function authenticatePassword(password, passwordHash, salt) {
+  var saltHashFormat = /^[0-9a-f]{32}\/[0-9a-f]*$/;
+
+  if (typeof password !== 'string') {
+    throw 'password must be a string';
+  }
+  if (typeof passwordHash !== 'string') {
+    ('password hash must be a string');
+  }
+  if (!salt) {
+    if (saltHashFormat.test(passwordHash)) {
+      var splitHash = passwordHash.split('/');
+      passwordHash = splitHash[1];
+      salt = splitHash[0];
+    } else {
+      throw 'If no salt is passed, password hash must include a salt as created by generatePasswordHashString when no salt is passed.';
+    }
+  }
+
+  if (typeof salt !== 'string') {
+    throw 'salt must be a string';
+  }
+
+  var testHash = generatePasswordHashString(password, salt);
+
+  return testHash === passwordHash;
 }
 
 function validatePassword(password, salt, hash, speed = 'fast') {
@@ -90,4 +130,5 @@ module.exports.generateSaltBuffer = generateSaltBuffer;
 module.exports.generateSaltString = generateSaltString;
 module.exports.generatePasswordHashBuffer = generatePasswordHashBuffer;
 module.exports.generatePasswordHashString = generatePasswordHashString;
-module.exports.validatePassword = validatePassword;
+module.exports.authenticatePassword = authenticatePassword;
+
