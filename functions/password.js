@@ -84,7 +84,31 @@ function generatePasswordHashString(
 }
 
 function authenticatePassword(password, passwordHash, salt) {
-  return null;
+  var saltHashFormat = /^[0-9a-f]{32}\/[0-9a-f]*$/;
+
+  if (typeof password !== 'string') {
+    throw 'password must be a string';
+  }
+  if (typeof passwordHash !== 'string') {
+    ('password hash must be a string');
+  }
+  if (!salt) {
+    if (saltHashFormat.test(passwordHash)) {
+      var splitHash = passwordHash.split('/');
+      passwordHash = splitHash[1];
+      salt = splitHash[0];
+    } else {
+      throw 'If no salt is passed, password hash must include a salt as created by generatePasswordHashString when no salt is passed.';
+    }
+  }
+
+  if (typeof salt !== 'string') {
+    throw 'salt must be a string';
+  }
+
+  var testHash = generatePasswordHashString(password, salt);
+
+  return testHash === passwordHash;
 }
 
 module.exports.generateSaltBuffer = generateSaltBuffer;

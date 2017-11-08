@@ -146,8 +146,8 @@ describe('generatePasswordHashString', () => {
 });
 
 describe('authenticatePassword', () => {
-  var sameSalt = generateSaltBuffer();
-  var differentSalt = generateSaltBuffer();
+  var sameSalt = generateSaltString();
+  var differentSalt = generateSaltString();
   var password = 'password';
   var differentPassword = 'something-else';
   var passwordHash = generatePasswordHashString(password, sameSalt);
@@ -176,5 +176,17 @@ describe('authenticatePassword', () => {
 
   it('should accept a combined password and salt string separated by a / if no salt is given', () => {
     expect(authenticatePassword(password, saltlessHash)).toBe(true);
+  });
+
+  it('throws an error if any part is invalid', () => {
+    expect(() => {
+      authenticatePassword(12345, saltlessHash);
+    }).toThrow();
+    expect(() => {
+      authenticatePassword(password, passwordHash, 1231231231);
+    }).toThrow();
+    expect(() => {
+      authenticatePassword(password, passwordHash);
+    }).toThrow();
   });
 });
