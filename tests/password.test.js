@@ -5,6 +5,7 @@ var {
   generatePasswordHashString,
   generateSaltBuffer,
   generateSaltString,
+  authenticatePassword,
 } = passwordUtilities;
 
 describe('generateSaltBuffer', () => {
@@ -141,5 +142,39 @@ describe('generatePasswordHashString', () => {
     expect(saltHashFormat.test(generatePasswordHashString(password))).toBe(
       true,
     );
+  });
+});
+
+describe('authenticatePassword', () => {
+  var sameSalt = generateSaltBuffer();
+  var differentSalt = generateSaltBuffer();
+  var password = 'password';
+  var differentPassword = 'something-else';
+  var passwordHash = generatePasswordHashString(password, sameSalt);
+  var saltlessHash = generatePasswordHashString(password);
+  var saltHashFormat = /^[0-9a-f]{32}\/[0-9a-f]*$/;
+
+  it('should return a boolean', () => {
+    expect(typeof authenticatePassword(password, passwordHash, sameSalt)).toBe(
+      'boolean',
+    );
+  });
+
+  it('should return false if the password or salt are incorrect', () => {
+    expect(
+      authenticatePassword(differentPassword, passwordHash, sameSalt),
+    ).toBe(false);
+
+    expect(authenticatePassword(password, passwordHash, differentSalt)).toBe(
+      false,
+    );
+  });
+
+  it('should return true if the password and salt are correct', () => {
+    expect(authenticatePassword(password, passwordHash, sameSalt)).toBe(true);
+  });
+
+  it('should accept a combined password and salt string separated by a / if no salt is given', () => {
+    expect(authenticatePassword(password, saltlessHash)).toBe(true);
   });
 });

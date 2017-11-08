@@ -83,7 +83,12 @@ function generatePasswordHashString(
   }
 }
 
+function authenticatePassword(password, passwordHash, salt) {
+  return null;
+}
+
 module.exports.generateSaltBuffer = generateSaltBuffer;
 module.exports.generateSaltString = generateSaltString;
 module.exports.generatePasswordHashBuffer = generatePasswordHashBuffer;
 module.exports.generatePasswordHashString = generatePasswordHashString;
+module.exports.authenticatePassword = authenticatePassword;
